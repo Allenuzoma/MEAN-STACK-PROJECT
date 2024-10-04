@@ -2,6 +2,8 @@
 
 
 **Step 2: Install MongoDB**
+
+
 Due to the fact I tried havin issues with my MongoDB 6.0 installation as seen below, I had to install an updated version of MongoDB 7
 
 
