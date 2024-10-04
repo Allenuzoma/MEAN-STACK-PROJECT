@@ -129,12 +129,74 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 ![server js in books dir](https://github.com/user-attachments/assets/392dc6ff-bcde-4cf2-8aa1-4bfb7d81e521)
 
 
-**Install Express and set up routes to the server**
+**Step 3: Install Express and set up routes to the server**
 
-We will install express and mongoose using the command:
+1. We will install express and mongoose using the command:
 
 
          sudo npm install express
          sudo apt install mongoose
 
 ![install express and mongoose](https://github.com/user-attachments/assets/c3fe8749-d3fb-4810-b5a5-13c0e98945d6)
+
+
+2. In the Books directory we will create a folder called apps:
+
+
+         mkdir apps&&cd apps
+
+3. in this folder called apps, we will create a routes.js file and copy the following command into it:
+
+
+
+
+var Book = require('./models/book');
+module.exports = function(app){
+    app.get('/book', function(req,res){
+        Book.find({}, function(err, result){
+            if(err) throw err;
+            res.json(result);
+        });
+    });
+    app.post('/book', function(req, res){
+        var book = new Book({
+            name:req.body.name,
+            isbn:req.body.isbn,
+            author:req.body.author,
+            pages:req.body.pages
+        });
+        book.save(function(err, result){
+            if(err)throw err;
+            res.json({
+                message:"Successfully added book",
+                book:result
+            });
+        });
+    });
+    app.delete("/book/:isbn", function(req, res){
+        Book.findOneAndRemove(req.query, function(err,result){
+            if(err) throw err;
+            res.json({
+                message: "Successfully deleted the book",
+                book: result
+            });
+        });
+    });
+    var path = require('path');
+    app.get('*', function(req,res){
+        res.sendfile(path.json(__dirname + '/public', 'index.html'));
+    });
+};
+
+
+
+
+
+![routes js in apps folder](https://github.com/user-attachments/assets/eecebc1f-3017-490a-bfce-9d7b78b96f44)
+![routes js in apps folder 2](https://github.com/user-attachments/assets/6f83b95f-3788-4741-98aa-23d3185ff520)
+
+
+
+
+
+
