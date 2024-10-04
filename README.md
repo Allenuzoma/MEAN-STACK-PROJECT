@@ -18,11 +18,13 @@
          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse"
 
 +  Once the repository is added, reload the local package index:
-         sudo apt update
+
+   sudo apt update
 
   The command refreshes the local repositories and makes Ubuntu aware of the newly added MongoDB 7.0 repository.
 + With that out of the way, install the mongodb-org meta-package that provides MongoDB:
-          sudo apt install mongodb-org -y
+
+  sudo apt install mongodb-org -y
 
 + The command installs the MongoDB database server along with the database core components including the shell tools. Once the installation is complete, verify the version of MongoDB 
   installed:
