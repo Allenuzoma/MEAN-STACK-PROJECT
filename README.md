@@ -67,15 +67,18 @@ database core components including the shell tools.
 
 Next is to start the mongodb service and check the status using systemctl
 
-sudo systemctl start mongod
-
-sudo systemctl status mongod
+    sudo systemctl start mongod
+    
+    sudo systemctl status mongod
 
 ![failure w exit code](https://github.com/user-attachments/assets/5f7e81b2-8d4d-4d20-b1f2-7664dd6d1360)
 
 The above image showed an error message  "Failed with result 'exit-code'". I was able to resolve this with the following code:
 
 
-sudo rm -rf /tmp/mongodb-27017.sock
-sudo service mongod start
+    sudo rm -rf /tmp/mongodb-27017.sock
+    sudo service mongod start
+
+
+![failure w exit code resolution](https://github.com/user-attachments/assets/51c90928-b2b9-456b-863e-f472d837f738)
 
