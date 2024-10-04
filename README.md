@@ -54,7 +54,28 @@ Due to the fact I tried havin issues with my MongoDB 6.0 installation as seen be
   ![installing mongodb 7](https://github.com/user-attachments/assets/c7a312de-9400-4fb6-8b87-aa5aee316cc4)
 
 
-+ The command installs the MongoDB database server along with the database core components including the shell tools. Once the installation is complete, verify the version of MongoDB 
-  installed:
+  ![installing mongodb 7    ](https://github.com/user-attachments/assets/db4af510-a11e-4b3b-99b6-a4c67f6b4e1d)
+
+The command installs the MongoDB database server along with the 
+database core components including the shell tools.
+
++  We can verify the version of MongoDB installed:
 
            mongod --version
+  
+![verifying my mongodb version](https://github.com/user-attachments/assets/d78f0629-0b99-4a4a-b8e7-cd4f44adb76c)
+
+Next is to start the mongodb service and check the status using systemctl
+
+sudo systemctl start mongod
+
+sudo systemctl status mongod
+
+![failure w exit code](https://github.com/user-attachments/assets/5f7e81b2-8d4d-4d20-b1f2-7664dd6d1360)
+
+The above image showed an error message  "Failed with result 'exit-code'". I was able to resolve this with the following code:
+
+
+sudo rm -rf /tmp/mongodb-27017.sock
+sudo service mongod start
+
