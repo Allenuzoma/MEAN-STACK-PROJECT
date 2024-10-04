@@ -109,7 +109,9 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 
 5. Create a file named server.js and copy the following code into it
-   
+
+
+
 
    var express = require('express');
    var bodyParser = require('body-parser');
@@ -121,6 +123,8 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
    app.listen(app.get('port'), function(){
        console.log('Server up: http://localhost:' + app.get('port'));
    });
+
+
   
 ![server js in books dir](https://github.com/user-attachments/assets/392dc6ff-bcde-4cf2-8aa1-4bfb7d81e521)
 
