@@ -98,11 +98,11 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 3. Next we will create a folder named books and enter it:
 
-    mkdir books&&cd books
+       mkdir books&&cd books
 
 4. Run the command to make the books a package:
 
-   npm init
+      npm init
 
 
 ![npm init books](https://github.com/user-attachments/assets/f43aafe4-7c25-4e2e-be45-550008de8f00)
@@ -111,16 +111,16 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 5. Create a file named server.js and copy the following code into it
    
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
-require('./apps/routes')(app);
-app.set('port', 3000);
-app.listen(app.get('port'), function(){
-    console.log('Server up: http://localhost:' + app.get('port'));
-});
+   var express = require('express');
+   var bodyParser = require('body-parser');
+   var app = express();
+   app.use(express.static(__dirname + '/public'));
+   app.use(bodyParser.json());
+   require('./apps/routes')(app);
+   app.set('port', 3000);
+   app.listen(app.get('port'), function(){
+       console.log('Server up: http://localhost:' + app.get('port'));
+   });
   
 ![server js in books dir](https://github.com/user-attachments/assets/392dc6ff-bcde-4cf2-8aa1-4bfb7d81e521)
 
