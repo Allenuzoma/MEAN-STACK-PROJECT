@@ -196,7 +196,153 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 ![routes js in apps folder 2](https://github.com/user-attachments/assets/6f83b95f-3788-4741-98aa-23d3185ff520)
 
 
+4. In the apps directory create a folder called models and create a file called books and copy the following code into book.js file:
 
+var mongoose = require('mongoose');
+var dbHost = 'mongodb://localhost:27017/test';
+mongoose.connect(dbHost);
+mongoose.connection;
+mongoose.set('debug', true);
+var bookSchema = mongoose.Schema({
+    name: String,
+    isbn: {type: String, index: true},
+    author: String,
+    pages: Number
+});
+var Book = mongoose.model('Book', bookSchema);
+module.exports = mongoose.model('Book', bookSchema);
+
+
+![book js in models in apps](https://github.com/user-attachments/assets/3c434d13-2ab5-4702-8504-5b8bc2d70867)
+
+
+**Step 3: Access the routes with AngularJs**
+1. Go back to the books directory and create a folder called public and create a file script.js
+
+
+
+      mkdir public&&cd public&&nano script.js
+
+
+2. Copy the following code into the script.js
+
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+    // Fetch books from the server
+    $http({
+        method: 'GET',
+        url: '/book'
+    }).then(function successCallback(response) {
+        $scope.books = response.data;
+    }, function errorCallback(response) {
+        console.log('Error:' + response);
+    });
+
+    // Delete a book
+    $scope.del_book = function(book) {
+        $http({
+            method: 'DELETE',
+            url: '/book/' + book.isbn // Use book.isbn directly in the URL
+        }).then(function successCallback(response) {
+            console.log(response);
+            // Optionally, refresh the book list or remove the deleted book from $scope.books
+        }, function errorCallback(response) {
+            console.log('Error:' + response);
+        });
+    };
+
+    // Add a new book
+    $scope.add_book = function() {
+        var body = {
+            name: $scope.Name,
+            isbn: $scope.Isbn,
+            author: $scope.Author,
+            pages: $scope.Pages
+        };
+
+        $http({
+            method: 'POST', // Changed to POST for adding a book
+            url: '/book',
+            data: body,
+            headers: {
+                'Content-Type': 'application/json' // Set the content type to JSON
+            }
+        }).then(function successCallback(response) {
+            console.log(response);
+            // Optionally, refresh the book list or add the new book to $scope.books
+        }, function errorCallback(response) {
+            console.log('Error:' + response);
+        });
+    };
+});
+
+   
+
+
+
+
+![script js in public in books](https://github.com/user-attachments/assets/44ea16ad-cf05-49d6-b1e8-a960fad49700)
+
+![script js in public in books 2](https://github.com/user-attachments/assets/59a3ce41-29f7-440b-8741-fee9c657dad2)
+
+3. In the public folder, create the index.js file and copy the code into index.js:
+
+
+
+<!doctype html>
+<html ng-app="myApp" ng-controller="myCtrl">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="script.js"></script>
+</head>    
+    <body>
+        <div>
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" ng-model="Name"></td>
+                </tr>
+                <tr>
+                    <td>Isbn:</td>
+                    <td><input type="text" ng-model="Isbn"></td>
+                </tr>
+                <tr>
+                    <td>Author:</td>
+                    <td><input type="text" ng-model="Author"></td>
+                </tr>
+                <tr>
+                    <td>Pages:</td>
+                    <td><input type="text" ng-model="Pages"></td>
+                </tr>
+            </table>
+            <button ng-click="add_book()">Add</button>
+        </div>
+        <hr>
+        <div>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Isbn</th>
+                    <th>Author</th>
+                    <th>Pages</th>
+                </tr>
+
+                <tr ng-repeat="book in books">
+                    <td>{{book.name}}</td>
+                    <td>{{book.isbn}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.pages}}</td>
+
+                    <td><input type="button" value="Delete" data-ng-click="del_book(book)"></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+
+   
+
+![index js in public](https://github.com/user-attachments/assets/2f2c8b51-9b68-464c-9dce-0299dd4868c2)
 
 
 
