@@ -134,7 +134,7 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 We will install express and mongoose using the command:
 
 
-   sudo npm install express
-   sudo apt install mongoose
+         sudo npm install express
+         sudo apt install mongoose
 
 ![install express and mongoose](https://github.com/user-attachments/assets/c3fe8749-d3fb-4810-b5a5-13c0e98945d6)
