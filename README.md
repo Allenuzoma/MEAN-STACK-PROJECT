@@ -589,6 +589,7 @@ Now the app can be accessed on a browser with public IP address or public DNS na
 
 
 
+![working](https://github.com/user-attachments/assets/4b6f6c74-26da-4089-9b63-7fdcd822ede8)
 
 
 
