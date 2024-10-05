@@ -3,15 +3,19 @@
 
 Node Js is a javascript runtime used to set up Express routes and AngularJs controllers
 1. Update and upgrade Ubuntu using the command:
+
+
             sudo apt update && sudo apt upgrade
 
    
 
-3. Add certificates using the command:
+2. Add certificates using the command:
+
+
             sudo apt -y install curl dirmngr apt-transport-https lsb-release cacertificates
             curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -            
 
-4. Install nodejs using the command:
+3. Install nodejs using the command:
 
 
             sudo apt install -y nodejs
