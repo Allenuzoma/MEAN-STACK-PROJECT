@@ -1,4 +1,20 @@
 # MEAN-STACK-PROJECT
+**Step 1: Install Node Js**
+
+Node Js is a javascript runtime used to set up Express routes and AngularJs controllers
+1. Update and upgrade Ubuntu using the command:
+            sudo apt update && sudo apt upgrade
+
+   
+
+3. Add certificates using the command:
+            sudo apt -y install curl dirmngr apt-transport-https lsb-release cacertificates
+            curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -            
+
+4. Install nodejs using the command:
+
+
+            sudo apt install -y nodejs
 
 
 **Step 2: Install MongoDB**
@@ -342,7 +358,27 @@ app.controller('myCtrl', function($scope, $http) {
 
    
 
-![index js in public](https://github.com/user-attachments/assets/2f2c8b51-9b68-464c-9dce-0299dd4868c2)
+![index html in public](https://github.com/user-attachments/assets/6e4d1f5d-306e-47ee-a78b-836087f57156)
+
+
+
+
+Now enter the command to start the server:
+
+      node server.js
+
+We can now see that the server runs and can be connected on port 3300
+Test the following command on a terminal to test:
+
+
+      curl -s http://localhost:3300
+
+
+Open port 3300 by adding an incoming rule in the security group of the EC2 instance.
+
+Now the app can be accessed on a browser with public IP address or public DNS name.
+
+
 
 
 
