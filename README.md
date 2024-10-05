@@ -1,6 +1,7 @@
 # MEAN Stack Deployment to Ubuntu in AWS
 
-The MEAN stack is a full-stack JavaScript framework consisting of MongoDB, Express.js, Angular, and Node.js. Here's a brief breakdown:
+The MEAN stack is a full-stack JavaScript framework consisting of MongoDB, Express.js, Angular, and Node.js. 
+Here's a brief breakdown:
 
 MongoDB: A NoSQL database for storing book data, such as title, author, genre, etc.
 Express.js: A backend framework for handling server-side logic, such as APIs to add, update, or retrieve books.
@@ -144,13 +145,13 @@ database core components including the shell tools.
 
 
 
-8. Next is to start the mongodb service and check the status using systemctl
+8. Next is to start the mongodb service and check the status using systemctl:
 
 
 
-    sudo systemctl start mongod
-    
-    sudo systemctl status mongod
+          sudo systemctl start mongod
+          
+          sudo systemctl status mongod
 
 ![failure w exit code](https://github.com/user-attachments/assets/5f7e81b2-8d4d-4d20-b1f2-7664dd6d1360)
 
@@ -160,14 +161,14 @@ database core components including the shell tools.
 The above image showed an error message  "Failed with result 'exit-code'". I was able to resolve this with the following code:
 
 
-    sudo rm -rf /tmp/mongodb-27017.sock
-    sudo service mongod start
+          sudo rm -rf /tmp/mongodb-27017.sock
+          sudo service mongod start
 
  9. Verifying the status of the mongodb service:
 
 
 
-    sudo systemctl status mongod
+          sudo systemctl status mongod
     
 
 
@@ -177,7 +178,7 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
     
 
-   sudo apt install body-parser
+         sudo apt install body-parser
    
 
    ![install body parser](https://github.com/user-attachments/assets/6efee89f-1443-4142-bbba-60b911ef250a)
@@ -249,6 +250,7 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 
 
+
          sudo npm install express
          sudo apt install mongoose
 
@@ -258,6 +260,7 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 
 2. In the Books directory we will create a folder called apps:
+
 
 
          mkdir apps&&cd apps
@@ -425,64 +428,69 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 
 **Step 3: Access the routes with AngularJs**
-1. Go back to the books directory and create a folder called public and create a file script.js
+1. Go back to the books directory and create a folder called public and create a file script.js:
+
+   
 
 
 
-      mkdir public&&cd public&&nano script.js
+               mkdir public&&cd public&&nano script.js
 
 
-2. Copy the following code into the script.js
 
-var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope, $http) {
-    // Fetch books from the server
-    $http({
-        method: 'GET',
-        url: '/book'
-    }).then(function successCallback(response) {
-        $scope.books = response.data;
-    }, function errorCallback(response) {
-        console.log('Error:' + response);
-    });
+2. Copy the following code into the script.js:
 
-    // Delete a book
-    $scope.del_book = function(book) {
-        $http({
-            method: 'DELETE',
-            url: '/book/' + book.isbn // Use book.isbn directly in the URL
-        }).then(function successCallback(response) {
-            console.log(response);
-            // Optionally, refresh the book list or remove the deleted book from $scope.books
-        }, function errorCallback(response) {
-            console.log('Error:' + response);
-        });
-    };
 
-    // Add a new book
-    $scope.add_book = function() {
-        var body = {
-            name: $scope.Name,
-            isbn: $scope.Isbn,
-            author: $scope.Author,
-            pages: $scope.Pages
-        };
 
-        $http({
-            method: 'POST', // Changed to POST for adding a book
-            url: '/book',
-            data: body,
-            headers: {
-                'Content-Type': 'application/json' // Set the content type to JSON
-            }
-        }).then(function successCallback(response) {
-            console.log(response);
-            // Optionally, refresh the book list or add the new book to $scope.books
-        }, function errorCallback(response) {
-            console.log('Error:' + response);
-        });
-    };
-});
+                  var app = angular.module('myApp', []);
+                  app.controller('myCtrl', function($scope, $http) {
+                      // Fetch books from the server
+                      $http({
+                          method: 'GET',
+                          url: '/book'
+                      }).then(function successCallback(response) {
+                          $scope.books = response.data;
+                      }, function errorCallback(response) {
+                          console.log('Error:' + response);
+                      });
+                  
+                      // Delete a book
+                      $scope.del_book = function(book) {
+                          $http({
+                              method: 'DELETE',
+                              url: '/book/' + book.isbn // Use book.isbn directly in the URL
+                          }).then(function successCallback(response) {
+                              console.log(response);
+                              // Optionally, refresh the book list or remove the deleted book from $scope.books
+                          }, function errorCallback(response) {
+                              console.log('Error:' + response);
+                          });
+                      };
+                  
+                      // Add a new book
+                      $scope.add_book = function() {
+                          var body = {
+                              name: $scope.Name,
+                              isbn: $scope.Isbn,
+                              author: $scope.Author,
+                              pages: $scope.Pages
+                          };
+                  
+                          $http({
+                              method: 'POST', // Changed to POST for adding a book
+                              url: '/book',
+                              data: body,
+                              headers: {
+                                  'Content-Type': 'application/json' // Set the content type to JSON
+                              }
+                          }).then(function successCallback(response) {
+                              console.log(response);
+                              // Optionally, refresh the book list or add the new book to $scope.books
+                          }, function errorCallback(response) {
+                              console.log('Error:' + response);
+                          });
+                      };
+                  });
 
    
 
@@ -493,60 +501,65 @@ app.controller('myCtrl', function($scope, $http) {
 
 ![script js in public in books 2](https://github.com/user-attachments/assets/59a3ce41-29f7-440b-8741-fee9c657dad2)
 
+
+
+
 3. In the public folder, create the index.js file and copy the code into index.js:
 
 
 
-<!doctype html>
-<html ng-app="myApp" ng-controller="myCtrl">
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="script.js"></script>
-</head>    
-    <body>
-        <div>
-            <table>
-                <tr>
-                    <td>Name:</td>
-                    <td><input type="text" ng-model="Name"></td>
-                </tr>
-                <tr>
-                    <td>Isbn:</td>
-                    <td><input type="text" ng-model="Isbn"></td>
-                </tr>
-                <tr>
-                    <td>Author:</td>
-                    <td><input type="text" ng-model="Author"></td>
-                </tr>
-                <tr>
-                    <td>Pages:</td>
-                    <td><input type="text" ng-model="Pages"></td>
-                </tr>
-            </table>
-            <button ng-click="add_book()">Add</button>
-        </div>
-        <hr>
-        <div>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Isbn</th>
-                    <th>Author</th>
-                    <th>Pages</th>
-                </tr>
 
-                <tr ng-repeat="book in books">
-                    <td>{{book.name}}</td>
-                    <td>{{book.isbn}}</td>
-                    <td>{{book.author}}</td>
-                    <td>{{book.pages}}</td>
 
-                    <td><input type="button" value="Delete" data-ng-click="del_book(book)"></td>
-                </tr>
-            </table>
-        </div>
-    </body>
-</html>
+            <!doctype html>
+            <html ng-app="myApp" ng-controller="myCtrl">
+            <head>
+                <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+                <script src="script.js"></script>
+            </head>    
+                <body>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>Name:</td>
+                                <td><input type="text" ng-model="Name"></td>
+                            </tr>
+                            <tr>
+                                <td>Isbn:</td>
+                                <td><input type="text" ng-model="Isbn"></td>
+                            </tr>
+                            <tr>
+                                <td>Author:</td>
+                                <td><input type="text" ng-model="Author"></td>
+                            </tr>
+                            <tr>
+                                <td>Pages:</td>
+                                <td><input type="text" ng-model="Pages"></td>
+                            </tr>
+                        </table>
+                        <button ng-click="add_book()">Add</button>
+                    </div>
+                    <hr>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Isbn</th>
+                                <th>Author</th>
+                                <th>Pages</th>
+                            </tr>
+            
+                            <tr ng-repeat="book in books">
+                                <td>{{book.name}}</td>
+                                <td>{{book.isbn}}</td>
+                                <td>{{book.author}}</td>
+                                <td>{{book.pages}}</td>
+            
+                                <td><input type="button" value="Delete" data-ng-click="del_book(book)"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </body>
+            </html>
 
    
 
@@ -557,13 +570,16 @@ app.controller('myCtrl', function($scope, $http) {
 
 Now enter the command to start the server:
 
-      node server.js
+
+
+         node server.js
 
 We can now see that the server runs and can be connected on port 3300
 Test the following command on a terminal to test:
 
 
-      curl -s http://localhost:3300
+
+         curl -s http://localhost:3300
 
 
 Open port 3300 by adding an incoming rule in the security group of the EC2 instance.
