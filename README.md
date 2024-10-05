@@ -1,4 +1,36 @@
-# MEAN-STACK-PROJECT
+# MEAN Stack Deployment to Ubuntu in AWS
+
+The MEAN stack is a full-stack JavaScript framework consisting of MongoDB, Express.js, Angular, and Node.js. Here's a brief breakdown:
+
+MongoDB: A NoSQL database for storing book data, such as title, author, genre, etc.
+Express.js: A backend framework for handling server-side logic, such as APIs to add, update, or retrieve books.
+Angular: A frontend framework for building the user interface, allowing users to interact with the Book Register (e.g., adding or viewing books).
+Node.js: A runtime environment for running JavaScript on the server, handling requests and connecting to the database.
+For a simple Book Register, MEAN is useful because it uses a single programming language (JavaScript) across the entire stack, making development more streamlined. You can easily implement CRUD operations (Create, Read, Update, Delete) for managing books, and the stack provides scalability, especially for web apps that may expand over time.
+
+**Step 0: Preparing Prerequisites**
+
+
+1. Create and launch an EC2 instance:
+
+   
+![instance launching](https://github.com/user-attachments/assets/feed93d5-381b-4803-b95f-70e60cea2e76)
+
+
+
+![instance details](https://github.com/user-attachments/assets/b03f755c-1635-4162-b330-0e253effd85a)
+
+
+2. SSH into the instance:
+ 
+   
+ ![ssh login to the instance](https://github.com/user-attachments/assets/fca09396-0ead-4c87-9a57-551ee51b929c)
+
+
+
+
+
+
 **Step 1: Install Node Js**
 
 Node Js is a javascript runtime used to set up Express routes and AngularJs controllers
@@ -75,6 +107,8 @@ Node Js is a javascript runtime used to set up Express routes and AngularJs cont
 
 5.  Once the repository is added, reload the local package index:
 
+   
+
          sudo apt update
     
 
@@ -139,7 +173,9 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 ![failure w exit code resolution](https://github.com/user-attachments/assets/51c90928-b2b9-456b-863e-f472d837f738)
 
-10. Install the Body-parser
+10. Install the Body-parser:
+
+    
 
    sudo apt install body-parser
    
@@ -152,12 +188,15 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
     
 
-       mkdir books&&cd books
+                   mkdir books&&cd books
+
+
+    
 
 13. Run the command to make the books a package:
     
 
-      npm init
+                  npm init
 
 
 ![npm init books](https://github.com/user-attachments/assets/f43aafe4-7c25-4e2e-be45-550008de8f00)
@@ -167,35 +206,40 @@ The above image showed an error message  "Failed with result 'exit-code'". I was
 
 
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const path = require('path');
-const app = express();
-const PORT = process.env.PORT || 3300;
+            const express = require('express');
+            const bodyParser = require('body-parser');
+            const mongoose = require('mongoose');
+            const path = require('path');
+            const app = express();
+            const PORT = process.env.PORT || 3300;
+            
+            // MongoDB connection
+            mongoose.connect('mongodb://localhost:27017/test', {
+              useNewUrlParser: true,
+              useUnifiedTopology: true,
+            })
+            .then(() => console.log('MongoDB connected'))
+            .catch(err => console.error('MongoDB connection error:', err));
+            
+            // Middleware
+            app.use(express.static(path.join(__dirname, 'public')));
+            app.use(bodyParser.json()); // Using body-parser to parse JSON request bodies
+            
+            // Routes
+            require('./apps/routes')(app);
+            
+            // Start the server
+            app.listen(PORT, () => {
+              console.log(`Server up: http://localhost:${PORT}`);
+            });
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/test', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
 
-// Middleware
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json()); // Using body-parser to parse JSON request bodies
-
-// Routes
-require('./apps/routes')(app);
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server up: http://localhost:${PORT}`);
-});
 
   
-![server js in books dir](https://github.com/user-attachments/assets/392dc6ff-bcde-4cf2-8aa1-4bfb7d81e521)
+![server js ](https://github.com/user-attachments/assets/ded0cbc9-bda6-438d-8300-31177e98740b)
+
+
+
 
 
 **Step 3: Install Express and set up routes to the server**
@@ -203,8 +247,12 @@ app.listen(PORT, () => {
 1. We will install express and mongoose using the command:
 
 
+
+
          sudo npm install express
          sudo apt install mongoose
+
+   
 
 ![install express and mongoose](https://github.com/user-attachments/assets/c3fe8749-d3fb-4810-b5a5-13c0e98945d6)
 
@@ -214,75 +262,166 @@ app.listen(PORT, () => {
 
          mkdir apps&&cd apps
 
-3. in this folder called apps, we will create a routes.js file and copy the following command into it:
+   
+
+4. in this folder called apps, we will create a routes.js file and copy the following command into it:
+
+
+
+                        const Book = require('./models/book');
+                        const path = require('path');
+                        
+                        // Export the Router
+                        module.exports = function(app) {
+                          // GET route to fetch all books
+                          app.get('/book', async (req, res) => {
+                            try {
+                              // Retrieve all books from the database
+                              const books = await Book.find();
+                              // Send the books as a JSON response
+                              res.json(books);
+                            } catch (err) {
+                              // If an error occurs, send a 500 status with an error message
+                              res.status(500).json({ message: 'Error fetching books', error: err.message });
+                            }
+                          });
+                        
+                          // POST route to add a new book
+                          app.post('/book', async (req, res) => {
+                            try {
+                              // Create a new Book instance with data from the request body
+                              const book = new Book({
+                                name: req.body.name,
+                                isbn: req.body.isbn,
+                                author: req.body.author,
+                                pages: req.body.pages
+                              });
+                              // Save the new book to the database
+                              const savedBook = await book.save();
+                              // Send a 201 status with a success message and the saved book data
+                              res.status(201).json({
+                                message: 'Successfully added book',
+                                book: savedBook
+                              });
+                            } catch (err) {
+                              // If an error occurs, send a 400 status with an error message
+                              res.status(400).json({ message: 'Error adding book', error: err.message });
+                            }
+                          });
+                        
+                        
+                           // PUT route to update a book
+                          app.put('/book/:isbn', async (req, res) => {
+                            try {
+                              // Find the book by ISBN and update it
+                              const updatedBook = await Book.findOneAndUpdate(
+                                { isbn: req.params.isbn },
+                                {
+                                  name: req.body.name,
+                                  author: req.body.author,
+                                  pages: req.body.pages
+                                },
+                                { new: true, runValidators: true }
+                              );
+                        
+                              if (!updatedBook) {
+                                return res.status(404).json({ message: 'Book not found' });
+                              }
+                        
+                              res.json({
+                                message: 'Successfully updated the book',
+                                book: updatedBook
+                              });
+                            } catch (err) {
+                              res.status(500).json({ message: 'Error updating book', error: err.message });
+                            }
+                          });
+                        
+                          // DELETE route to remove a book by ISBN
+                          app.delete('/book/:isbn', async (req, res) => {
+                            try {
+                              // Find and delete the book with the specified ISBN
+                              const result = await Book.findOneAndDelete({ isbn: req.params.isbn });
+                              if (!result) {
+                                // If no book is found, send a 404 status
+                                return res.status(404).json({ message: 'Book not found' });
+                              }
+                              // If the book is successfully deleted, send a success message with the deleted book data
+                              res.json({
+                                message: 'Successfully deleted the book',
+                                book: result
+                              });
+                            } catch (err) {
+                              // If an error occurs, send a 500 status with an error message
+                              res.status(500).json({ message: 'Error deleting book', error: err.message });
+                            }
+                          });
+                        
+                          // Catch-all route to serve the main HTML file
+                          app.get('*', (req, res) => {
+                            // Send the index.html file for any unmatched routes
+                            res.sendFile(path.join(__dirname, '../public', 'index.html'));
+                          });
+                        };
 
 
 
 
-         var Book = require('./models/book');
-         module.exports = function(app){
-             app.get('/book', function(req,res){
-                 Book.find({}, function(err, result){
-                     if(err) throw err;
-                     res.json(result);
-                 });
-             });
-             app.post('/book', function(req, res){
-                 var book = new Book({
-                     name:req.body.name,
-                     isbn:req.body.isbn,
-                     author:req.body.author,
-                     pages:req.body.pages
-                 });
-                 book.save(function(err, result){
-                     if(err)throw err;
-                     res.json({
-                         message:"Successfully added book",
-                         book:result
-                     });
-                 });
-             });
-             app.delete("/book/:isbn", function(req, res){
-                 Book.findOneAndRemove(req.query, function(err,result){
-                     if(err) throw err;
-                     res.json({
-                         message: "Successfully deleted the book",
-                         book: result
-                     });
-                 });
-             });
-             var path = require('path');
-             app.get('*', function(req,res){
-                 res.sendfile(path.json(__dirname + '/public', 'index.html'));
-             });
-         };
-         
+
+
+
+ ![routes js in apps folder](https://github.com/user-attachments/assets/f52eadf1-6a39-4ff4-930c-e77a6198160c)
 
 
 
 
-![routes js in apps folder](https://github.com/user-attachments/assets/eecebc1f-3017-490a-bfce-9d7b78b96f44)
-![routes js in apps folder 2](https://github.com/user-attachments/assets/6f83b95f-3788-4741-98aa-23d3185ff520)
+
+
 
 
 4. In the apps directory create a folder called models and create a file called books and copy the following code into book.js file:
 
-var mongoose = require('mongoose');
-var dbHost = 'mongodb://localhost:27017/test';
-mongoose.connect(dbHost);
-mongoose.connection;
-mongoose.set('debug', true);
-var bookSchema = mongoose.Schema({
-    name: String,
-    isbn: {type: String, index: true},
-    author: String,
-    pages: Number
-});
-var Book = mongoose.model('Book', bookSchema);
-module.exports = mongoose.model('Book', bookSchema);
 
 
-![book js in models in apps](https://github.com/user-attachments/assets/3c434d13-2ab5-4702-8504-5b8bc2d70867)
+
+
+                        const mongoose = require('mongoose');
+                        
+                        // Define the schema for the Book model
+                        const bookSchema = new mongoose.Schema({
+                          name: { 
+                            type: String, 
+                            required: true 
+                          },
+                          isbn: { 
+                            type: String, 
+                            required: true, 
+                            unique: true, 
+                            index: true  // Indexing isbn for faster queries
+                          },
+                          author: { 
+                            type: String, 
+                            required: true 
+                          },
+                          pages: { 
+                            type: Number, 
+                            required: true, 
+                            min: 1  // Ensure the book has at least one page
+                          }
+                        }, {
+                          timestamps: true  // Automatically add createdAt and updatedAt fields
+                        });
+                        
+                        // Create and export the Book model
+                        module.exports = mongoose.model('Book', bookSchema);
+
+
+
+
+![book js in models in apps](https://github.com/user-attachments/assets/a1a28186-904f-47a1-808d-690bfd4789bb)
+
+
+
 
 
 **Step 3: Access the routes with AngularJs**
